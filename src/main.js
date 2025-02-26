@@ -57,7 +57,7 @@ form.addEventListener("submit", async (event) => {
 });
 
 loadMoreButton.addEventListener("click", async () => {
-    showLoader(loader);
+    showLoader(/*loader*/);
 
     try {
         const response = await fetchImages(searchQuery);
@@ -74,6 +74,15 @@ loadMoreButton.addEventListener("click", async () => {
         } else {
             displayImages(images);
             smoothScroll(); 
+
+            if (currentPage > totalPages) {
+                iziToast.info({
+                    title: "Info",
+                    message: "No more images to load.",
+                    position: "topRight",
+                });
+                loadMoreButton.classList.add("hidden");  // ✅ Ховаємо кнопку після останньої сторінки
+            }
         }
     } catch (error) {
         iziToast.error({
@@ -82,6 +91,6 @@ loadMoreButton.addEventListener("click", async () => {
             position: "topRight",
         });
     } finally {
-        hideLoader(loader);
+        hideLoader(/*loader*/);
     }
 });
