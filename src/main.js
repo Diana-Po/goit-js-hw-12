@@ -57,20 +57,21 @@ form.addEventListener("submit", async (event) => {
 });
 
 loadMoreButton.addEventListener("click", async () => {
-    showLoader(/*loader*/);
+    showLoader(loader);
 
     try {
         const response = await fetchImages(searchQuery);
         const images = response.hits;
         const totalPages = Math.ceil(response.totalHits / 40);
 
-        if (images.length === 0 || currentPage > totalPages) {
+        if (images.length === 0 || currentPage >= totalPages) {
             iziToast.info({
                 title: "Info",
                 message: "We're sorry, but you've reached the end of search results.",
                 position: "topRight",
             });
             loadMoreButton.classList.add("hidden");  
+            return;
         } else {
             displayImages(images);
             smoothScroll(); 
@@ -81,7 +82,7 @@ loadMoreButton.addEventListener("click", async () => {
                     message: "No more images to load.",
                     position: "topRight",
                 });
-                loadMoreButton.classList.add("hidden");  // ✅ Ховаємо кнопку після останньої сторінки
+                loadMoreButton.classList.add("hidden");  
             }
         }
     } catch (error) {
@@ -91,6 +92,6 @@ loadMoreButton.addEventListener("click", async () => {
             position: "topRight",
         });
     } finally {
-        hideLoader(/*loader*/);
+        hideLoader(loader);
     }
 });
