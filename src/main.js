@@ -57,6 +57,7 @@ form.addEventListener("submit", async (event) => {
 });
 
 loadMoreButton.addEventListener("click", async () => {
+    loadMoreButton.classList.add("hidden");
     showLoader(loader);
 
     try {
@@ -70,19 +71,20 @@ loadMoreButton.addEventListener("click", async () => {
                 message: "We're sorry, but you've reached the end of search results.",
                 position: "topRight",
             });
-            loadMoreButton.classList.add("hidden");  
+            // loadMoreButton.classList.add("hidden");  
             return;
         } else {
             displayImages(images);
             smoothScroll(); 
 
             if (currentPage > totalPages) {
+                loadMoreButton.classList.remove("hidden");
                 iziToast.info({
                     title: "Info",
                     message: "No more images to load.",
                     position: "topRight",
                 });
-                loadMoreButton.classList.add("hidden");  
+              //  loadMoreButton.classList.add("hidden");  
             }
         }
     } catch (error) {
