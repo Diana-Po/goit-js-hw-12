@@ -27,9 +27,11 @@ form.addEventListener("submit", async (event) => {
     loadMoreButton.classList.add("hidden"); 
     showLoader(loader);
     resetPage(); 
+
     try {
         const response = await fetchImages(searchQuery);
-        const images = response.hits;  
+        const images = response.hits;
+        const totalPages = Math.ceil(response.totalHits / 40);  
 
         if (images.length === 0) {
             iziToast.error({
@@ -40,9 +42,10 @@ form.addEventListener("submit", async (event) => {
         } else {
             displayImages(images); 
 
-            const totalPages = Math.ceil(response.totalHits / 40);
-            if (currentPage <= totalPages) {
+            if (currentPage < totalPages) { 
                 loadMoreButton.classList.remove("hidden");  
+            } else {
+                loadMoreButton.classList.add("hidden");  
             }
         }
     } catch (error) {
@@ -65,26 +68,27 @@ loadMoreButton.addEventListener("click", async () => {
         const images = response.hits;
         const totalPages = Math.ceil(response.totalHits / 40);
 
-        if (images.length === 0 || currentPage >= totalPages) {
+        if (images.length === 0 || currentPage >= totalPages) { 
             iziToast.info({
                 title: "Info",
                 message: "We're sorry, but you've reached the end of search results.",
                 position: "topRight",
             });
-            // loadMoreButton.classList.add("hidden");  
             return;
         } else {
             displayImages(images);
-            smoothScroll(); 
+            smoothScroll();
 
-            if (currentPage > totalPages) {
-                loadMoreButton.classList.remove("hidden");
+         
+            if (currentPage < totalPages) { 
+                loadMoreButton.classList.remove("hidden");  
+            } else {
+                loadMoreButton.classList.add("hidden");  
                 iziToast.info({
                     title: "Info",
                     message: "No more images to load.",
                     position: "topRight",
                 });
-              //  loadMoreButton.classList.add("hidden");  
             }
         }
     } catch (error) {
